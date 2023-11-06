@@ -1,8 +1,19 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/To-Do/SRC/Main.gd" type="Script" id=1]
 [ext_resource path="res://addons/To-Do/Icons/Add.svg" type="Texture" id=2]
 [ext_resource path="res://addons/To-Do/SRC/Focus Timer.gd" type="Script" id=3]
+[ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=4]
+[ext_resource path="res://addons/To-Do/SRC/Notes.gd" type="Script" id=5]
+[ext_resource path="res://addons/To-Do/Fonts/spin_box_style.tres" type="Theme" id=6]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://addons/To-Do/Fonts/arial.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+use_filter = true
+font_data = SubResource( 1 )
 
 [node name="To-Do" type="Control"]
 anchor_right = 1.0
@@ -11,6 +22,7 @@ rect_min_size = Vector2( 0, 400 )
 script = ExtResource( 1 )
 
 [node name="TabContainer" type="TabContainer" parent="."]
+unique_name_in_owner = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 drag_to_rearrange_enabled = true
@@ -32,7 +44,7 @@ size_flags_horizontal = 3
 
 [node name="TaskEdit" type="LineEdit" parent="TabContainer/Tasks/HBoxContainer"]
 unique_name_in_owner = true
-margin_right = 1207.0
+margin_right = 1017.0
 margin_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -40,29 +52,43 @@ clear_button_enabled = true
 placeholder_text = "Enter Task"
 
 [node name="AddButton" type="Button" parent="TabContainer/Tasks/HBoxContainer"]
-margin_left = 1211.0
-margin_right = 1272.0
+margin_left = 1021.0
+margin_right = 1072.0
 margin_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.05
 icon = ExtResource( 2 )
 icon_align = 1
-expand_icon = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Tasks"]
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.96
 margin_top = 75.0
+margin_bottom = -42.0
 scroll_horizontal_enabled = false
 
 [node name="TasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer"]
 unique_name_in_owner = true
-margin_right = 1272.0
-margin_bottom = 609.0
+margin_right = 1072.0
+margin_bottom = 1691.64
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 5
+
+[node name="DeleteAllTasksButton" type="Button" parent="TabContainer/Tasks"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -68.5
+margin_top = -42.0
+margin_right = 68.5
+margin_bottom = -10.0
+rect_pivot_offset = Vector2( 68.5, 0 )
+text = " Delete All Tasks"
+icon = ExtResource( 4 )
 
 [node name="Notes" type="Tabs" parent="TabContainer"]
 unique_name_in_owner = true
@@ -74,35 +100,55 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 drag_to_rearrange_enabled = true
+script = ExtResource( 5 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Notes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+custom_constants/separation = 10
+alignment = 1
 
-[node name="NewNoteButton" type="Button" parent="TabContainer/Notes/VBoxContainer"]
-margin_left = 607.0
-margin_right = 665.0
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Notes/VBoxContainer"]
+margin_right = 1072.0
+margin_bottom = 22.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="NewNoteButton" type="Button" parent="TabContainer/Notes/VBoxContainer/HBoxContainer"]
+margin_left = 429.0
+margin_right = 530.0
 margin_bottom = 22.0
 grow_horizontal = 2
 size_flags_horizontal = 4
-text = "New"
+text = " New Note "
 icon = ExtResource( 2 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Notes/VBoxContainer"]
-margin_top = 26.0
-margin_right = 1272.0
-margin_bottom = 684.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="NotesVBox" type="VBoxContainer" parent="TabContainer/Notes/VBoxContainer/ScrollContainer"]
+[node name="DeleteAllNotessButton" type="Button" parent="TabContainer/Notes/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-margin_right = 1272.0
-margin_bottom = 658.0
+margin_left = 540.0
+margin_right = 642.0
+margin_bottom = 22.0
+rect_pivot_offset = Vector2( 68.5, 0 )
+text = " Delete All "
+icon = ExtResource( 4 )
+
+[node name="NotesScrollContainer" type="ScrollContainer" parent="TabContainer/Notes/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 32.0
+margin_right = 1072.0
+margin_bottom = 1884.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Focus Timer" type="Tabs" parent="TabContainer"]
+[node name="NotesVBox" type="VBoxContainer" parent="TabContainer/Notes/VBoxContainer/NotesScrollContainer"]
+unique_name_in_owner = true
+margin_right = 1072.0
+margin_bottom = 1852.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="FocusTimer" type="Tabs" parent="TabContainer"]
 unique_name_in_owner = true
 visible = false
 anchor_right = 1.0
@@ -114,34 +160,41 @@ margin_bottom = -4.0
 drag_to_rearrange_enabled = true
 script = ExtResource( 3 )
 
-[node name="TaskName" type="LineEdit" parent="TabContainer/Focus Timer"]
+[node name="OpenFocusTasks" type="OptionButton" parent="TabContainer/FocusTimer"]
 unique_name_in_owner = true
 anchor_left = 0.2
 anchor_top = 0.1
 anchor_right = 0.8
 anchor_bottom = 0.15
+toggle_mode = false
+keep_pressed_outside = true
+text = "Checkpoints Save System"
+clip_text = true
+items = [ "Checkpoints Save System", null, false, 0, null, "Parallax", null, false, 1, null, "Win Screen", null, false, 2, null, "Other...", null, false, 3, null ]
+selected = 0
+
+[node name="TaskName" type="LineEdit" parent="TabContainer/FocusTimer"]
+unique_name_in_owner = true
+visible = false
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.25
 grow_horizontal = 2
 grow_vertical = 2
+text = "Test with old data, if ID fileds are handled correctly"
 expand_to_text_length = true
 placeholder_text = "Enter Task Name"
 caret_blink = true
 
-[node name="StartFocus" type="Button" parent="TabContainer/Focus Timer"]
-unique_name_in_owner = true
-anchor_left = 0.4
-anchor_top = 0.65
-anchor_right = 0.6
-anchor_bottom = 0.8
-text = "Start Focus"
-
-[node name="FocusTypes" type="TabContainer" parent="TabContainer/Focus Timer"]
+[node name="FocusTypeTabs" type="TabContainer" parent="TabContainer/FocusTimer"]
 unique_name_in_owner = true
 anchor_left = 0.2
-anchor_top = 0.25
+anchor_top = 0.3
 anchor_right = 0.8
-anchor_bottom = 0.6
+anchor_bottom = 0.7
 
-[node name="Timer" type="Tabs" parent="TabContainer/Focus Timer/FocusTypes"]
+[node name="Timer" type="Tabs" parent="TabContainer/FocusTimer/FocusTypeTabs"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -153,43 +206,46 @@ __meta__ = {
 "_tab_disabled": false
 }
 
-[node name="Time" type="HBoxContainer" parent="TabContainer/Focus Timer/FocusTypes/Timer"]
+[node name="Time" type="HBoxContainer" parent="TabContainer/FocusTimer/FocusTypeTabs/Timer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="Hours" type="SpinBox" parent="TabContainer/Focus Timer/FocusTypes/Timer/Time"]
+[node name="Hours" type="SpinBox" parent="TabContainer/FocusTimer/FocusTypeTabs/Timer/Time"]
 unique_name_in_owner = true
-margin_right = 249.0
-margin_bottom = 203.0
+margin_right = 209.0
+margin_bottom = 717.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 6 )
 allow_greater = true
 align = 1
-suffix = "hour"
+suffix = "h"
 
-[node name="Minutes" type="SpinBox" parent="TabContainer/Focus Timer/FocusTypes/Timer/Time"]
+[node name="Minutes" type="SpinBox" parent="TabContainer/FocusTimer/FocusTypeTabs/Timer/Time"]
 unique_name_in_owner = true
-margin_left = 253.0
-margin_right = 502.0
-margin_bottom = 203.0
+margin_left = 213.0
+margin_right = 422.0
+margin_bottom = 717.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 6 )
 max_value = 60.0
 align = 1
-suffix = "minute"
+suffix = "min"
 
-[node name="Seconds" type="SpinBox" parent="TabContainer/Focus Timer/FocusTypes/Timer/Time"]
+[node name="Seconds" type="SpinBox" parent="TabContainer/FocusTimer/FocusTypeTabs/Timer/Time"]
 unique_name_in_owner = true
-margin_left = 506.0
-margin_right = 755.0
-margin_bottom = 203.0
+margin_left = 426.0
+margin_right = 635.0
+margin_bottom = 717.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 6 )
 max_value = 60.0
 align = 1
-suffix = "second"
+suffix = "sec"
 
-[node name="Free Focus" type="Tabs" parent="TabContainer/Focus Timer/FocusTypes"]
+[node name="Free Focus" type="Tabs" parent="TabContainer/FocusTimer/FocusTypeTabs"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -202,15 +258,16 @@ __meta__ = {
 "_tab_disabled": false
 }
 
-[node name="TimeLabel" type="Label" parent="TabContainer/Focus Timer/FocusTypes/Free Focus"]
+[node name="TimeLabel" type="Label" parent="TabContainer/FocusTimer/FocusTypeTabs/Free Focus"]
 unique_name_in_owner = true
 anchor_right = 1.0
 anchor_bottom = 1.0
+custom_fonts/font = SubResource( 2 )
 text = "00:00:00"
 align = 1
 valign = 1
 
-[node name="Focus History" type="Tabs" parent="TabContainer/Focus Timer/FocusTypes"]
+[node name="Focus History" type="Tabs" parent="TabContainer/FocusTimer/FocusTypeTabs"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -220,19 +277,52 @@ margin_right = -4.0
 margin_bottom = -4.0
 rect_min_size = Vector2( 0, 192 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Focus Timer/FocusTypes/Focus History"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/FocusTimer/FocusTypeTabs/Focus History"]
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.96
+margin_bottom = -42.0
 follow_focus = true
 
-[node name="FocusTasks" type="VBoxContainer" parent="TabContainer/Focus Timer/FocusTypes/Focus History/ScrollContainer"]
+[node name="FocusTasks" type="VBoxContainer" parent="TabContainer/FocusTimer/FocusTypeTabs/Focus History/ScrollContainer"]
 unique_name_in_owner = true
-margin_right = 755.2
-margin_bottom = 203.4
+margin_right = 635.2
+margin_bottom = 646.896
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[connection signal="save_external_data" from="." to="TabContainer/Focus Timer" method="save_external_data"]
+[node name="ClearFocusHistoryButton" type="Button" parent="TabContainer/FocusTimer/FocusTypeTabs/Focus History"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -6.0
+margin_top = -36.0
+margin_right = 6.0
+margin_bottom = -10.0
+grow_horizontal = 2
+disabled = true
+text = " Clear Focus History "
+icon = ExtResource( 4 )
+
+[node name="StartFocus" type="Button" parent="TabContainer/FocusTimer"]
+unique_name_in_owner = true
+anchor_left = 0.4
+anchor_top = 0.75
+anchor_right = 0.6
+anchor_bottom = 0.85
+text = "Start Focus"
+
+[connection signal="save_external_data" from="." to="TabContainer/FocusTimer" method="save_external_data"]
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_TabContainer_tab_changed"]
+[connection signal="text_entered" from="TabContainer/Tasks/HBoxContainer/TaskEdit" to="." method="_on_TaskEdit_text_entered"]
 [connection signal="pressed" from="TabContainer/Tasks/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
-[connection signal="pressed" from="TabContainer/Notes/VBoxContainer/NewNoteButton" to="." method="_on_NewNoteButton_pressed"]
-[connection signal="pressed" from="TabContainer/Focus Timer/StartFocus" to="TabContainer/Focus Timer" method="_on_StartFocus_pressed"]
+[connection signal="pressed" from="TabContainer/Tasks/DeleteAllTasksButton" to="." method="_on_DeleteAllTasksButton_pressed"]
+[connection signal="pressed" from="TabContainer/Notes/VBoxContainer/HBoxContainer/NewNoteButton" to="." method="_on_NewNoteButton_pressed"]
+[connection signal="pressed" from="TabContainer/Notes/VBoxContainer/HBoxContainer/DeleteAllNotessButton" to="." method="_on_DeleteAllNotessButton_pressed"]
+[connection signal="timer_stopped" from="TabContainer/FocusTimer" to="." method="_on_FocusTimer_timer_stopped"]
+[connection signal="item_focused" from="TabContainer/FocusTimer/OpenFocusTasks" to="TabContainer/FocusTimer" method="_on_OpenFocusTasks_item_selected"]
+[connection signal="item_selected" from="TabContainer/FocusTimer/OpenFocusTasks" to="TabContainer/FocusTimer" method="_on_OpenFocusTasks_item_selected"]
+[connection signal="tab_changed" from="TabContainer/FocusTimer/FocusTypeTabs" to="TabContainer/FocusTimer" method="_on_FocusTypes_tab_changed"]
+[connection signal="pressed" from="TabContainer/FocusTimer/FocusTypeTabs/Focus History/ClearFocusHistoryButton" to="TabContainer/FocusTimer" method="_on_ClearFocusHistoryButton_pressed"]
+[connection signal="pressed" from="TabContainer/FocusTimer/StartFocus" to="TabContainer/FocusTimer" method="_on_StartFocus_pressed"]

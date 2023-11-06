@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/To-Do/SRC/Note.gd" type="Script" id=1]
 [ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=2]
+[ext_resource path="res://addons/To-Do/Icons/Save.svg" type="Texture" id=3]
 
 [node name="Note" type="Panel"]
 anchor_left = 0.1
@@ -24,33 +25,54 @@ size_flags_vertical = 3
 custom_constants/separation = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1014.0
+margin_right = 854.0
 margin_bottom = 35.0
 
 [node name="Title" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-margin_right = 961.0
+margin_right = 809.0
 margin_bottom = 35.0
 rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 placeholder_text = "Title"
 
+[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_left = 773.0
+margin_right = 811.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.05
+icon = ExtResource( 3 )
+icon_align = 1
+
 [node name="DeleteButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 965.0
-margin_right = 1014.0
+margin_left = 813.0
+margin_right = 854.0
 margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.05
 icon = ExtResource( 2 )
 icon_align = 1
-expand_icon = true
+
+[node name="TaskChooser" type="OptionButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 45.0
+margin_right = 854.0
+margin_bottom = 65.0
+focus_mode = 1
+enabled_focus_mode = 1
+keep_pressed_outside = true
+clip_text = true
 
 [node name="Content" type="TextEdit" parent="VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 45.0
-margin_right = 1014.0
-margin_bottom = 566.0
+margin_top = 75.0
+margin_right = 854.0
+margin_bottom = 1526.0
 rect_min_size = Vector2( 0, 100 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -62,6 +84,10 @@ smooth_scrolling = true
 wrap_enabled = true
 caret_blink = true
 
+[connection signal="focus_exited" from="VBoxContainer/HBoxContainer/Title" to="." method="lost_focus"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/Title" to="." method="_on_Title_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteButton" to="." method="_on_DeleteButton_pressed"]
+[connection signal="item_selected" from="VBoxContainer/TaskChooser" to="." method="_on_TaskChooser_item_selected"]
+[connection signal="focus_exited" from="VBoxContainer/Content" to="." method="lost_focus"]
 [connection signal="text_changed" from="VBoxContainer/Content" to="." method="_on_Content_text_changed"]

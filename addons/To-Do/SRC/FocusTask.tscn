@@ -17,7 +17,6 @@ margin_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 editable = false
-expand_to_text_length = true
 
 [node name="InfoButton" type="Button" parent="."]
 margin_left = 1064.0

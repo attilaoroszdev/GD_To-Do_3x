@@ -1,17 +1,20 @@
 tool
 extends Tabs
 
+signal timer_stopped()
+
 const FocusSavePath = "res://addons/To-Do/Data/focus_timer.json"
 const HistorySavePath = "res://addons/To-Do/Data/focus_history.json"
 
 const FocusTask = preload("res://addons/To-Do/SRC/FocusTask.tscn")
+const ErrorBox = preload("res://addons/To-Do/SRC/FocusError.tscn")
 
 enum FocusTypes {
 	_Timer,
 	_Free
 	}
 
-onready var focus_types = $"%FocusTypes"
+onready var focus_type_tabs = $"%FocusTypeTabs"
 
 onready var hours = $"%Hours"
 onready var minutes = $"%Minutes"
@@ -22,7 +25,8 @@ onready var time_label = $"%TimeLabel"
 onready var start_focus = $"%StartFocus"
 onready var task_name = $"%TaskName"
 onready var focus_tasks = $"%FocusTasks"
-
+onready var open_focus_tasks = $"%OpenFocusTasks"
+onready var clear_history_button = $"%ClearFocusHistoryButton"
 var type:int
 var is_focusing := false
 var time:float
@@ -48,19 +52,27 @@ func _process(delta) :
 
 func _on_StartFocus_pressed() :
 	if task_name.text.empty() :
-		push_error("GD To-Do: Task Name Is Invalid")
+		# I kept missing the error message, a popup works better for me
+#		push_error("GD To-Do: Task Name Is Invalid")
+		var error_note = ErrorBox.instance()
+		error_note.text = "Task name is invalid!"
+		add_child(error_note)
 		return
 	if is_focusing :
 		is_focusing = false
 		add_task_to_history()
-		clear()
+#		clear()
 	else :
-		match focus_types.current_tab :
+		match focus_type_tabs.current_tab :
 			0 :
 				type = FocusTypes._Timer
 				time = calculate_time()
 				if time == 0 :
-					push_error("GD To-Do: Time Is Invalid")
+					# I kept missing the error message, a popup works better for me
+					var error_note = ErrorBox.instance()
+					error_note.text = "Time is invalid!"
+					add_child(error_note)
+#					push_error("GD To-Do: Time Is Invalid")
 					return
 			1 :
 				type = FocusTypes._Free
@@ -150,9 +162,12 @@ func save_focus_history() -> void :
 
 
 func _ready() -> void :
+	set_up_chooser()
 	load_timer_data()
 	load_history_data()
 	edit_ui()
+
+
 
 
 func load_timer_data() -> void :
@@ -163,12 +178,17 @@ func load_timer_data() -> void :
 		start_datetime = timer_data.start_datetime
 		is_focusing = timer_data.is_focusing
 		task_name.text = timer_data.task_name
+		# It bothered me that the timer wasn1t on zero when starting
+		if not is_focusing:
+			time_label.text = "00:00:00"
+			
 
 
 func load_history_data() -> void :
 	var data = load_data(HistorySavePath)
 	if data != null :
 		focus_history = data
+		
 	clear_tasks()
 	add_tasks()
 
@@ -177,21 +197,24 @@ func edit_ui() -> void :
 	if is_focusing :
 		start_focus.text = "Stop Focus"
 		task_name.editable = false
+		open_focus_tasks.disabled = true
 		match type :
 			FocusTypes._Timer :
-				focus_types.set_tab_disabled(1, true)
+				focus_type_tabs.set_tab_disabled(1, true)
 				set_timer_select_editable(false)
 			FocusTypes._Free :
 				type = FocusTypes._Free
-				focus_types.set_tab_disabled(0, true)
+				focus_type_tabs.set_tab_disabled(0, true)
 	else :
 		start_focus.text = "Start Focus"
 		
-		focus_types.set_tab_disabled(0, false)
-		focus_types.set_tab_disabled(1, false)
+		focus_type_tabs.set_tab_disabled(0, false)
+		focus_type_tabs.set_tab_disabled(1, false)
 		
 		set_timer_select_editable(true)
 		task_name.editable = true
+		open_focus_tasks.disabled = false
+		emit_signal("timer_stopped")
 
 
 func set_timer_select_editable(value:bool) -> void :
@@ -211,7 +234,7 @@ func add_task_to_history() -> void :
 		"end_time" : Time.get_datetime_string_from_datetime_dict(
 			Time.get_datetime_dict_from_system(), true),
 	}
-	
+	clear_history_button.disabled = false
 	focus_history.append(data)
 	save_focus_history()
 	load_history_data()
@@ -230,13 +253,62 @@ func clear_tasks() -> void :
 
 
 func add_tasks() -> void :
+	var not_empty:bool = false
 	for i in focus_history :
+		not_empty = true
 		var task = FocusTask.instance()
 		task.data = i
 		focus_tasks.add_child(task)
 		var _err = task.connect("removed", self, "remove_task_from_history")
-
+	if not_empty:
+		clear_history_button.disabled = false
 
 func remove_task_from_history(data:Dictionary) -> void :
 	focus_history.erase(data)
+	save_focus_history()
+
+# Add available task names to the list
+func set_up_chooser():
+	if open_focus_tasks.get_item_count() == 1:
+		task_name.visible = true
+		task_name.text = ""
+		open_focus_tasks.visible = false
+	else:
+		task_name.visible = false
+		open_focus_tasks.visible = true
+		task_name.text = open_focus_tasks.get_item_text(0)
+
+
+func _on_OpenFocusTasks_item_selected(index):
+	time = 0.0
+	if not is_focusing:
+		time_label.text = "00:00:00"
+	if index == open_focus_tasks.get_item_count() - 1:
+		task_name.visible = true
+		task_name.text = ""
+		task_name.grab_click_focus()
+	else:
+		task_name.visible = false
+		task_name.text = open_focus_tasks.get_item_text(index)
+
+
+
+
+
+func _on_FocusTypes_tab_changed(tab):
+	if not is_focusing:
+		# It bothreed me that the timer wasn't on zero when starting
+		time_label.text = "00:00:00"
+	if tab == 2:
+		# Don't need that button on the history tab
+		start_focus.visible = false
+	else:
+		start_focus.visible = true
+
+# Convenience for removing all history. Probably shoudl add a confirmation dialogue
+func _on_ClearFocusHistoryButton_pressed():
+	for task in focus_tasks.get_children():
+		task._on_DeleteButton_pressed()
+		yield(task, "tree_exited")
+	clear_history_button.disabled = true
 	save_focus_history()
