@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/To-Do/SRC/Note.gd" type="Script" id=1]
+[ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=2]
+
+[node name="Note" type="Panel"]
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+rect_min_size = Vector2( 0, 240 )
+size_flags_horizontal = 3
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1014.0
+margin_bottom = 35.0
+
+[node name="Title" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 961.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+size_flags_horizontal = 3
+placeholder_text = "Title"
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 965.0
+margin_right = 1014.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.05
+icon = ExtResource( 2 )
+icon_align = 1
+expand_icon = true
+
+[node name="Content" type="TextEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 45.0
+margin_right = 1014.0
+margin_bottom = 566.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+syntax_highlighting = true
+draw_tabs = true
+fold_gutter = true
+highlight_all_occurrences = true
+smooth_scrolling = true
+wrap_enabled = true
+caret_blink = true
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/Title" to="." method="_on_Title_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteButton" to="." method="_on_DeleteButton_pressed"]
+[connection signal="text_changed" from="VBoxContainer/Content" to="." method="_on_Content_text_changed"]
