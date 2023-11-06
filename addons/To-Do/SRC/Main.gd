@@ -20,6 +20,7 @@ onready var notes_tab = $"%Notes"
 onready var tab_container = $"%TabContainer"
 onready var delete_all_tasks_button = $"%DeleteAllTasksButton"
 onready var delete_all_notes_button = $"%DeleteAllNotessButton"
+onready var delete_completed_tasks_button = $"%DeleteCompletedTasksButton"
 onready var notes_scroll_container = $"%NotesScrollContainer"
 
 # Only to save empty when it's really empty. Had some problems losing all my tasks...
@@ -65,6 +66,7 @@ func _on_AddButton_pressed():
 		
 		# Since we now have at least one task
 		delete_all_tasks_button.disabled = false
+		delete_completed_tasks_button.disabled = false
 
 # Moves task up one opsition
 func move_task_up(ins):
@@ -96,6 +98,12 @@ func task_state_changed(task):
 		if focus_timer.is_focusing:
 			if focus_timer.task_name.text == task.content:
 				focus_timer._on_StartFocus_pressed()
+	var have_completed_tasks:bool = false
+	for task in tasks_v_box.get_children():
+		if task.completed:
+			have_completed_tasks = true
+			break
+	delete_completed_tasks_button.disabled = not have_completed_tasks
 	sort_tasks()
 
 
@@ -212,13 +220,15 @@ func _ready():
 		t.queue_free()
 		yield(t, "tree_exited")
 	var tasks_data = _load(tasks_save_path)
-
+	var have_completed_tasks:bool = false
 	if tasks_data != null :
 		##loops trough evry task in the data.
 		for t in tasks_data :
 			var ins = task.instance()
 			##sets the task vars to the values stored in the data file.
 			ins.completed = t.completed
+			if ins.completed:
+				have_completed_tasks = true
 			# For backward compatibility, for tasks created with previous versions, that did not
 			# yet have ids assigned
 			if t.has("id"):
@@ -276,8 +286,10 @@ func _ready():
 		disable_up_down_buttons_at_edges()
 		
 		delete_all_tasks_button.disabled = false
+		delete_completed_tasks_button.disabled = not have_completed_tasks
 	else:
 		delete_all_tasks_button.disabled = true
+		delete_completed_tasks_button.disabled = true
 	if is_instance_valid(notes_v_box):
 		if notes_v_box.get_child_count() > 0:
 			notes_are_empty = false
@@ -446,6 +458,17 @@ func _on_DeleteAllTasksButton_pressed():
 		tasks_are_empty = true
 		save_changes()
 		delete_all_tasks_button.disabled = true
+		delete_completed_tasks_button.disabled = true
+
+
+func _on_DeleteCompletedTasksButton_pressed():
+	if is_instance_valid(tasks_v_box):
+		for task in tasks_v_box.get_children():
+			if task.completed:
+				remove_task(task, false)
+		tasks_are_empty = true
+		save_changes()
+		delete_completed_tasks_button.disabled = true
 
 # Does what it says. Should maybe add a confirmation dialogue
 func _on_DeleteAllNotessButton_pressed():
@@ -475,3 +498,6 @@ func task_note_button_pressed(task):
 		
 
 		
+
+
+

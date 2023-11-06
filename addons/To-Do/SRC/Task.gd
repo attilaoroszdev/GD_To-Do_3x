@@ -31,6 +31,7 @@ var data:Dictionary
 func _ready():
 	label.text = content
 	check_box.pressed = completed
+	label.editable = not completed
 	if data.empty() :
 		print("data empty")
 		data = {
@@ -45,6 +46,7 @@ func _ready():
 func _on_CheckBox_toggled(button_pressed):
 	if not data.empty() :
 		if completed :
+			label.editable = false
 			move_up_button.disabled = true
 			move_down_button.disabled = true
 			start_timer_button.disabled = true
@@ -52,6 +54,7 @@ func _on_CheckBox_toggled(button_pressed):
 			if data.completion_time == "..." :
 				data["completion_time"] = Time.get_datetime_string_from_system(false, true)
 		else :
+			label.editable = true
 			move_up_button.disabled = false
 			move_down_button.disabled = false
 			start_timer_button.disabled = false

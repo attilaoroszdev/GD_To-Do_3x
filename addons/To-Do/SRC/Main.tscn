@@ -76,18 +76,34 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 5
 
-[node name="DeleteAllTasksButton" type="Button" parent="TabContainer/Tasks"]
-unique_name_in_owner = true
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Tasks"]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -68.5
-margin_top = -42.0
+margin_top = -30.0
 margin_right = 68.5
-margin_bottom = -10.0
+grow_horizontal = 2
+custom_constants/separation = 20
+
+[node name="DeleteAllTasksButton" type="Button" parent="TabContainer/Tasks/HBoxContainer2"]
+unique_name_in_owner = true
+margin_right = 151.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 151, 32 )
 rect_pivot_offset = Vector2( 68.5, 0 )
 text = " Delete All Tasks"
+icon = ExtResource( 4 )
+
+[node name="DeleteCompletedTasksButton" type="Button" parent="TabContainer/Tasks/HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 171.0
+margin_right = 322.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 137, 32 )
+rect_pivot_offset = Vector2( 68.5, 0 )
+text = " Delete Completed"
 icon = ExtResource( 4 )
 
 [node name="Notes" type="Tabs" parent="TabContainer"]
@@ -168,9 +184,9 @@ anchor_right = 0.8
 anchor_bottom = 0.15
 toggle_mode = false
 keep_pressed_outside = true
-text = "Checkpoints Save System"
+text = "Add-on: Add \"remove completed tasks\" button (Right next to the other one)"
 clip_text = true
-items = [ "Checkpoints Save System", null, false, 0, null, "Parallax", null, false, 1, null, "Win Screen", null, false, 2, null, "Other...", null, false, 3, null ]
+items = [ "Add-on: Add \"remove completed tasks\" button (Right next to the other one)", null, false, 0, null, "Address all (or most) Debugger warnings", null, false, 1, null, "Find some sound for next level message", null, false, 2, null, "Sort out the shurkien sound, too", null, false, 3, null, "Add-on: Notes' descriptions shoud expand to content (Scrolling within a scroll-contaner is not cool)", null, false, 4, null, "Add-on: Reduce the size of the add-task LineEdit. It's taking up valuabe space", null, false, 5, null, "Add-on: Add proper code-highlighting support to notes by adding in the proper colours", null, false, 6, null, "Other...", null, false, 7, null ]
 selected = 0
 
 [node name="TaskName" type="LineEdit" parent="TabContainer/FocusTimer"]
@@ -182,7 +198,6 @@ anchor_right = 0.8
 anchor_bottom = 0.25
 grow_horizontal = 2
 grow_vertical = 2
-text = "Test with old data, if ID fileds are handled correctly"
 expand_to_text_length = true
 placeholder_text = "Enter Task Name"
 caret_blink = true
@@ -317,7 +332,8 @@ text = "Start Focus"
 [connection signal="tab_changed" from="TabContainer" to="." method="_on_TabContainer_tab_changed"]
 [connection signal="text_entered" from="TabContainer/Tasks/HBoxContainer/TaskEdit" to="." method="_on_TaskEdit_text_entered"]
 [connection signal="pressed" from="TabContainer/Tasks/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
-[connection signal="pressed" from="TabContainer/Tasks/DeleteAllTasksButton" to="." method="_on_DeleteAllTasksButton_pressed"]
+[connection signal="pressed" from="TabContainer/Tasks/HBoxContainer2/DeleteAllTasksButton" to="." method="_on_DeleteAllTasksButton_pressed"]
+[connection signal="pressed" from="TabContainer/Tasks/HBoxContainer2/DeleteCompletedTasksButton" to="." method="_on_DeleteCompletedTasksButton_pressed"]
 [connection signal="pressed" from="TabContainer/Notes/VBoxContainer/HBoxContainer/NewNoteButton" to="." method="_on_NewNoteButton_pressed"]
 [connection signal="pressed" from="TabContainer/Notes/VBoxContainer/HBoxContainer/DeleteAllNotessButton" to="." method="_on_DeleteAllNotessButton_pressed"]
 [connection signal="timer_stopped" from="TabContainer/FocusTimer" to="." method="_on_FocusTimer_timer_stopped"]
