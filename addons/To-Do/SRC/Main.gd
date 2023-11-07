@@ -38,6 +38,8 @@ func _on_AddButton_pressed():
 		ins.content = task_edit.text
 		# Small addition to the task data, to better connect with notes
 		ins.id = running_task_id
+		ins.is_starred = false
+		
 		ins.data = {
 			"name" : task_edit.text,
 			"addition_time" : Time.get_datetime_string_from_system(false, true),
@@ -61,12 +63,13 @@ func _on_AddButton_pressed():
 		ins.connect("start_task_timer", self, "start_timer_from_task")
 		ins.connect("stop_task_timer", self, "stop_timer_from_task")
 		ins.connect("note_button_pressed", self, "task_note_button_pressed")
-		
+		ins.connect("favourite_pressed", self, "task_starred")
+		ins.favourite_button.pressed = false
 		sort_tasks()
 		
 		# Since we now have at least one task
 		delete_all_tasks_button.disabled = false
-		delete_completed_tasks_button.disabled = false
+#		delete_completed_tasks_button.disabled = false
 
 # Moves task up one opsition
 func move_task_up(ins):
@@ -107,38 +110,109 @@ func task_state_changed(task):
 	sort_tasks()
 
 
-
+# Rewrote the sorting to better accomodate different types of sorting, 
+# at the same time. Two custom array sorts produced soem unexpected results
+# and I had no patience to dive deeper into why. Anyway, new method makes it
+# unnecessary to save twice, and then set everything up from scratch. See below
 ##sorts the tasks (uncompleted first).
-func sort_tasks() :
-	save_changes()
-	var tasks = _load(tasks_save_path)
-	tasks.sort_custom(self, "sort_by_completed")
-	##removes unsorted the tasks.
-	for c in tasks_v_box.get_children() :
-		c.queue_free()
-		yield(c, "tree_exited")
-	##adds the sorted tasks.
-	for t in tasks :
-		var copy = task.instance()
-		copy.content = t.content
-		copy.completed = t.completed
-		copy.id = t.id
-		copy.data = t.data
-		tasks_v_box.add_child(copy)
-		copy.connect("state_changed", self, "task_state_changed")
-		copy.connect("content_changed", self, "save_changes")
-		copy.connect("task_removed", self, "remove_task")
-		copy.connect("move_up", self, "move_task_up")
-		copy.connect("move_down", self, "move_task_down")
-		copy.connect("start_task_timer", self, "start_timer_from_task")
-		copy.connect("stop_task_timer", self, "stop_timer_from_task")
-		copy.connect("note_button_pressed", self, "task_note_button_pressed")
+#func sort_tasks_old() :
+#	save_changes()
+#	var tasks = _load(tasks_save_path)
+#	tasks.sort_custom(self, "sort_by_completed")
+#
+#	##removes unsorted the tasks.
+#	for c in tasks_v_box.get_children() :
+#		c.queue_free()
+#		yield(c, "tree_exited")
+#	##adds the sorted tasks.
+#	for t in tasks :
+#		var copy = task.instance()
+#		copy.content = t.content
+#		copy.completed = t.completed
+#		copy.id = t.id
+#		copy.is_starred = t.is_starred
+#
+#		copy.data = t.data
+#		tasks_v_box.add_child(copy)
+#		copy.connect("state_changed", self, "task_state_changed")
+#		copy.connect("content_changed", self, "save_changes")
+#		copy.connect("task_removed", self, "remove_task")
+#		copy.connect("move_up", self, "move_task_up")
+#		copy.connect("move_down", self, "move_task_down")
+#		copy.connect("start_task_timer", self, "start_timer_from_task")
+#		copy.connect("stop_task_timer", self, "stop_timer_from_task")
+#		copy.connect("note_button_pressed", self, "task_note_button_pressed")
+#		copy.connect("favourite_pressed", self, "task_starred")
+#		copy.favourite_button.pressed = copy.is_starred
+#	# Checking both ends of the incomplete task list
+#	disable_up_down_buttons_at_edges()
+#	check_existing_task_notes()
+#	save_changes()
+
+
+func sort_tasks():
+	var starred_tasks_tmp:Array = []
+	var incomplete_tasks_tmp:Array = []
+	var completed_tasks_tmp:Array = []
 	
-	# Checking both ends of the incomplete task list
+	# Sort existing tasks into temporary arrays, then rremove them from the contianer
+	for task in tasks_v_box.get_children():
+		if task.completed:
+			completed_tasks_tmp.append(task)
+		else:
+			if task.is_starred:
+				starred_tasks_tmp.append(task)
+			else:
+				incomplete_tasks_tmp.append(task)
+		tasks_v_box.remove_child(task)
+	
+	# Add back tasks from each array. Signals and data remain intact
+	for task in starred_tasks_tmp:
+		tasks_v_box.add_child(task)
+	starred_tasks_tmp.clear()
+	for task in incomplete_tasks_tmp:
+		tasks_v_box.add_child(task)
+	incomplete_tasks_tmp.clear()
+	for task in completed_tasks_tmp:
+		tasks_v_box.add_child(task)
+	completed_tasks_tmp.clear()
+
+	# Check the buttons
 	disable_up_down_buttons_at_edges()
-	check_existing_task_notes()
 	save_changes()
 
+
+func sort_notes():
+	var unlinked_tmp:Array = []
+	var linked_to_unfinished_tmp:Array = []
+	var linked_to_completed_tmp:Array =[]
+	
+	
+	for note in notes_v_box.get_children():
+		if note.linked_task == 0:
+			unlinked_tmp.append(note)
+		else:
+			if note.linked_task_completed:
+				linked_to_completed_tmp.append(note)
+			else:
+				linked_to_unfinished_tmp.append(note)
+		notes_v_box.remove_child(note)
+		
+	for note in unlinked_tmp:
+		notes_v_box.add_child(note)
+	unlinked_tmp.clear()
+	for note in linked_to_unfinished_tmp:
+		notes_v_box.add_child(note)
+	linked_to_unfinished_tmp.clear()
+	for note in linked_to_completed_tmp:
+		notes_v_box.add_child(note)
+	linked_to_completed_tmp.clear()
+	
+	load_predefined_tasks()
+	save_changes()
+		
+
+		
 # This is where the "magic" happens. :D If task is on the top, up buttn gets disabled.
 # If task is at the bottom, or the last incomplete task, down button gets disabled
 # (So it won't get mixed with the completed ones at the bottom)
@@ -147,23 +221,36 @@ func disable_up_down_buttons_at_edges():
 	tasks_v_box.get_child(0).move_up_button.disabled = true
 	for idx in tasks_v_box.get_child_count():
 		# Enable all in case of moving thigns around
-		if not tasks_v_box.get_child(idx).completed:
+		if not tasks_v_box.get_child(idx).completed and not tasks_v_box.get_child(idx).is_starred:
 			tasks_v_box.get_child(idx).move_down_button.disabled = false
 			tasks_v_box.get_child(idx).move_up_button.disabled = false
-		if idx == 0 and not tasks_v_box.get_child(idx).completed:
+		# Starred tasks cannot move
+		if tasks_v_box.get_child(idx).is_starred:
+			tasks_v_box.get_child(idx).move_down_button.disabled = true
 			tasks_v_box.get_child(idx).move_up_button.disabled = true
-		# Only disabled the one before the first completed item
+		# First task cannot go up
+		elif idx == 0 and not tasks_v_box.get_child(idx).completed:
+			tasks_v_box.get_child(idx).move_up_button.disabled = true
+		# Only disable down button  the one before the first completed item
 		elif tasks_v_box.get_child(idx).completed and idx > 0:
-			tasks_v_box.get_child(idx -1).move_down_button.disabled = true
+			tasks_v_box.get_child(idx - 1).move_down_button.disabled = true
 			break
+		# Disable upward movement for the first non-starred task
+		elif not tasks_v_box.get_child(idx).is_starred and idx > 0:
+			if tasks_v_box.get_child(idx - 1).is_starred:
+				tasks_v_box.get_child(idx).move_up_button.disabled = true
+			else:
+				tasks_v_box.get_child(idx).move_up_button.disabled = false
 	tasks_v_box.get_child(tasks_v_box.get_child_count() - 1).move_down_button.disabled = true	
 
+
+# This is no longer necessary with the new sorting fucntion
 ##sorts the tasks by completed (uncompleted first).
-func sort_by_completed(a, b)-> bool :
-	##returns true if a is completed but b isn't.
-	if int(a.completed) < int(b.completed) :
-		return true
-	return false
+#func sort_by_completed(a, b)-> bool :
+#	##returns true if a is completed but b isn't.
+#	if int(a.completed) < int(b.completed) :
+#		return true
+#	return false
 
 
 ##adds new note
@@ -179,9 +266,10 @@ func add_new_note(task_to_link:int):
 	ins.linked_task = task_to_link
 	notes_v_box.add_child(ins)
 	yield(get_tree(), "idle_frame")
+	notes_v_box.move_child(ins, 0)
+	notes_scroll_container.set_deferred("scroll_vertical", 0)
 	# Scroll down to the newly added note.
 	# Would probably be better to add notes to the top, as with tasks?
-	notes_scroll_container.ensure_control_visible(ins)
 	ins.connect("state_changed", self, "save_changes")
 	ins.connect("note_removed", self, "remove_note")
 	delete_all_notes_button.disabled = false
@@ -231,6 +319,10 @@ func _ready():
 				have_completed_tasks = true
 			# For backward compatibility, for tasks created with previous versions, that did not
 			# yet have ids assigned
+			if t.has("is_starred"):
+				ins.is_starred = t.is_starred
+			else:
+				ins.is_starred = false	
 			if t.has("id"):
 				ins.id = t.id
 			else:
@@ -253,36 +345,35 @@ func _ready():
 			ins.connect("start_task_timer", self, "start_timer_from_task")
 			ins.connect("stop_task_timer", self, "stop_timer_from_task")
 			ins.connect("note_button_pressed", self, "task_note_button_pressed")
+			ins.connect("favourite_pressed", self, "task_starred")
+			ins.favourite_button.pressed = ins.is_starred
+		
+		
 
 	##just the same as above ;)
-	if is_instance_valid(notes_v_box):
-		for n in notes_v_box.get_children() :
-			n.queue_free()
-			yield(n, "tree_exited")
-		var notes_data = _load(notes_save_path)
-		if notes_data != null :
-			for n in notes_data :
-				var ins = note.instance()
-				ins.content = n.content
-				ins.title = n.title
-				# For backward compatibility, for notes created with eralier versions that didn't 
-				# yet include the linked_task ID
-				if n.has("linked_task"):
-					ins.linked_task = int(n.linked_task)
-				else:
-					# Zero means no associated task
-					ins.linked_task = 0
-				print("Loaded note")
-				print("Title: ", ins.title)
-				print("Linked task: ", ins.linked_task)
-				print(" ")
-				notes_v_box.add_child(ins)
-				ins.connect("state_changed", self, "save_changes")
-				ins.connect("note_removed", self, "remove_note")
-			
+	for n in notes_v_box.get_children() :
+		n.queue_free()
+		yield(n, "tree_exited")
+	var notes_data = _load(notes_save_path)
+	if notes_data != null :
+		for n in notes_data :
+			var ins = note.instance()
+			ins.content = n.content
+			ins.title = n.title
+			# For backward compatibility, for notes created with eralier versions that didn't 
+			# yet include the linked_task ID
+			if n.has("linked_task"):
+				ins.linked_task = int(n.linked_task)
+			else:
+				# Zero means no associated task
+				ins.linked_task = 0
+			notes_v_box.add_child(ins)
+			ins.connect("state_changed", self, "save_changes")
+			ins.connect("note_removed", self, "remove_note")
 	# Some necessary checks and stuff, as already seen above		
 	if tasks_v_box.get_child_count() > 0:
 		tasks_are_empty = false
+		sort_tasks()
 		disable_up_down_buttons_at_edges()
 		
 		delete_all_tasks_button.disabled = false
@@ -295,10 +386,11 @@ func _ready():
 			notes_are_empty = false
 			delete_all_notes_button.disabled = false
 			load_predefined_tasks()
-			
+			sort_notes()
 		else:
 			delete_all_notes_button.disabled = true
 	check_existing_task_notes()
+	
 
 # Checks for every task in the task list if it has any notes linked to it
 func check_existing_task_notes():
@@ -354,6 +446,7 @@ func save_changes() :
 			##gets the data of the task.
 			var info = {
 				"id": t.id, # For identifying atached notes
+				"is_starred": t.is_starred, # favourites are marked with a srtar now
 				"content" : t.content,
 				"completed" : t.completed,
 				"data" : t.data.duplicate(),
@@ -424,9 +517,11 @@ func _on_TabContainer_tab_changed(tab):
 		#Both timer adn Notes might need this
 		load_predefined_tasks()
 		focus_timer.set_up_chooser()
+		
 	else:
 		# Tasks need to know about their notes, in case new ones were added
 		check_existing_task_notes()
+	sort_notes()
 
 # Will start a FreeFocus timer from the task's button, and change to that tab
 func start_timer_from_task(task):
@@ -488,7 +583,7 @@ func task_note_button_pressed(task):
 	for note in notes_v_box.get_children():
 		if note.linked_task == task.id:
 			notes_scroll_container.set_v_scroll(0)
-			notes_scroll_container.ensure_control_visible(note)
+			notes_scroll_container.call_deferred("ensure_control_visible", note)
 			has_note = true
 			break
 			
@@ -497,7 +592,8 @@ func task_note_button_pressed(task):
 		add_new_note(task.id)
 		
 
-		
+func task_starred(task, is_starred):
+	sort_tasks()
 
 
 
