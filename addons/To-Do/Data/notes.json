@@ -1,1 +1,6 @@
-[{"content":" I did some changes for damage to balance the game more.\nI edited the climbing so I made that you climb as long as there's energy, but energy will start increasing after one second of not climbing.","linked_task":0,"title":"Devlog Notes"}]
+[
+	{
+		"content": "Click On (+New) button to add a new note.\nClick on the trash can button to remove note.",
+		"title": "Welcome"
+	}
+]
