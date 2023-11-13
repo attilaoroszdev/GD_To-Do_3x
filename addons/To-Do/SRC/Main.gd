@@ -69,6 +69,7 @@ func _on_AddButton_pressed():
 		ins.connect("stop_task_timer", self, "stop_timer_from_task")
 		ins.connect("note_button_pressed", self, "task_note_button_pressed")
 		ins.connect("favourite_pressed", self, "task_starred")
+		ins.connect("color_tag_changed", self, "task_color_tag_changed")
 		ins.favourite_button.pressed = false
 #		sort_tasks()
 		disable_up_down_buttons_at_edges()
@@ -309,6 +310,12 @@ func load_tasks_and_notes():
 			if running_task_id < ins.id:
 				running_task_id = ins.id
 			ins.content = t.content
+			
+			if t.has("color_tag"):
+				ins.color_tag = t.color_tag
+			else:
+				ins.color_tag = ins.DEFAULT_COLOR_TAG
+				
 			if t.has("data") :
 				ins.data = t.data.duplicate()
 			
@@ -329,6 +336,7 @@ func load_tasks_and_notes():
 			ins.connect("stop_task_timer", self, "stop_timer_from_task")
 			ins.connect("note_button_pressed", self, "task_note_button_pressed")
 			ins.connect("favourite_pressed", self, "task_starred")
+			ins.connect("color_tag_changed", self, "task_color_tag_changed")
 			ins.favourite_button.pressed = ins.is_starred
 
 	##just the same as above ;)
@@ -455,11 +463,13 @@ func save_changes() :
 			##loops trough every task.
 			for t in vbox.get_children() :
 				##gets the data of the task.
+				print("Saving colour tag: ", t.color_tag)
 				var info = {
 					"id": t.id, # For identifying atached notes
+					"completed" : t.completed,
 					"is_starred": t.is_starred, # favourites are marked with a srtar now
 					"content" : t.content,
-					"completed" : t.completed,
+					"color_tag": t.color_tag,
 					"data" : t.data.duplicate(),
 				}
 				if not tasks_data.has(info) :
@@ -625,3 +635,8 @@ func task_starred(task, is_starred):
 #	sort_tasks()
 	toggle_list_labels()
 	disable_up_down_buttons_at_edges()
+
+# _task and _color_tag are not yet used, but added for future
+func task_color_tag_changed(_task, _color_tag):
+	print("saving from colour tag changes")
+	save_changes()

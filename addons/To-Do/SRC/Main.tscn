@@ -88,38 +88,38 @@ text = "Starred tasks"
 unique_name_in_owner = true
 margin_top = 33.0
 margin_right = 1072.0
-margin_bottom = 113.0
+margin_bottom = 85.0
 size_flags_horizontal = 3
 
 [node name="ActiveTasksLabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 117.0
+margin_top = 89.0
 margin_right = 1072.0
-margin_bottom = 146.0
+margin_bottom = 118.0
 theme = ExtResource( 7 )
 text = "Active tasks"
 
 [node name="TasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 150.0
+margin_top = 122.0
 margin_right = 1072.0
-margin_bottom = 203.0
+margin_bottom = 320.0
 size_flags_horizontal = 3
 custom_constants/separation = 5
 
 [node name="CompletedTaskslabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 207.0
+margin_top = 324.0
 margin_right = 1072.0
-margin_bottom = 236.0
+margin_bottom = 353.0
 theme = ExtResource( 7 )
 text = "Completed tasks"
 
 [node name="CompletedTasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 240.0
+margin_top = 357.0
 margin_right = 1072.0
-margin_bottom = 348.0
+margin_bottom = 409.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Tasks"]
@@ -231,9 +231,9 @@ anchor_right = 0.8
 anchor_bottom = 0.15
 toggle_mode = false
 keep_pressed_outside = true
-text = "Starred task 1"
+text = "Press the star icon to mark important tasks you want to keep on the top of the list"
 clip_text = true
-items = [ "Starred task 1", null, false, 0, null, "Starred task 2", null, false, 1, null, "Starred task 3", null, false, 2, null, "Labels should only display when relevant", null, false, 3, null, "Labels need to be styled. At minimum, there needs to be some headroom", null, false, 4, null, "Other...", null, false, 5, null ]
+items = [ "Press the star icon to mark important tasks you want to keep on the top of the list", null, false, 0, null, "Start using the To-Do addon to effectively keep track of development related tasks", null, false, 1, null, "Click the \"info\" button (questionmark) to see more details about a task", null, false, 2, null, "Experiment with the arrow keys to see how tasks can be moved up and down in a list", null, false, 3, null, "Add notes linked ot a task directly from the task list", null, false, 4, null, "Also try adding some notes from the Notes tab", null, false, 5, null, "Try colour-tags to organise tasks visually", null, false, 6, null, "Use FocusTimer to keep time-limits", null, false, 7, null, "Keep track of time spent on the current task with FreeFocus timer", null, false, 8, null, "Other...", null, false, 9, null ]
 selected = 0
 
 [node name="TaskName" type="LineEdit" parent="TabContainer/FocusTimer"]
@@ -245,7 +245,7 @@ anchor_right = 0.8
 anchor_bottom = 0.25
 grow_horizontal = 2
 grow_vertical = 2
-text = "Labels need styling"
+text = "Press the star icon to mark important tasks you want to keep on the top of the list"
 expand_to_text_length = true
 placeholder_text = "Enter Task Name"
 caret_blink = true

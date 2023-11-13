@@ -10,12 +10,16 @@ signal start_task_timer(task)
 signal stop_task_timer(task)
 signal note_button_pressed(task)
 signal favourite_pressed(task, starred)
+signal color_tag_changed(task, color_tag)
 
 const InfoBox = preload("res://addons/To-Do/SRC/TaskInfo.tscn")
+const DEFAULT_COLOR_TAG = "#202531"
+const DEFAULT_PICKER_COLOUR = Color("2a3142")
 
 export var content:String
-onready var label = $LineEdit
-onready var check_box = $CheckBox
+onready var label = $"%LineEdit"
+onready var check_box = $"%CheckBox"
+onready var color_tag_button = $"%ColourTagButton"
 onready var move_up_button = $"%MoveUpButton"
 onready var move_down_button = $"%MoveDownButton"
 onready var start_timer_button = $"%TimerStartButton"
@@ -30,6 +34,8 @@ var completed := false
 var has_note:bool = false
 var data:Dictionary
 var is_starred:bool = false
+var color_tag:String = DEFAULT_COLOR_TAG
+var new_stylebox_normal
 
 func _ready():
 	label.text = content
@@ -44,7 +50,17 @@ func _ready():
 			"state" : "Completed" if completed else "Incomplete",
 			"completion_time" : "..."
 		}
+	
 	data.state = "Completed" if completed else "Incomplete"
+	new_stylebox_normal = label.get_stylebox("normal").duplicate()
+	new_stylebox_normal.border_color = Color(color_tag)
+	label.add_stylebox_override("normal", new_stylebox_normal)
+	if color_tag == DEFAULT_COLOR_TAG or color_tag == "#000000":
+		color_tag_button.color = DEFAULT_PICKER_COLOUR
+	else:
+		color_tag_button.color = Color(color_tag)
+
+
 
 
 func _on_CheckBox_toggled(button_pressed):
@@ -173,3 +189,15 @@ func _on_FavouriteButton_toggled(button_pressed):
 		move_up_button.disabled = false
 	emit_signal("favourite_pressed", self, is_starred)
 
+
+
+func _on_ColourTagButton_color_changed(color):
+	if color != Color.black and color != Color(DEFAULT_COLOR_TAG):
+		color_tag = "#" + color.to_html(false)
+		color_tag_button.color = Color(color_tag)
+	else:
+		color_tag = DEFAULT_COLOR_TAG
+		color_tag_button.color = DEFAULT_PICKER_COLOUR
+	new_stylebox_normal.border_color = Color(color_tag)
+	label.add_stylebox_override("normal", new_stylebox_normal)
+	emit_signal("color_tag_changed", self, color_tag)
