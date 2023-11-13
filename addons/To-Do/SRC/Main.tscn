@@ -79,6 +79,7 @@ size_flags_vertical = 3
 
 [node name="StarredTasksLabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
+visible = false
 margin_right = 1072.0
 margin_bottom = 29.0
 theme = ExtResource( 7 )
@@ -86,29 +87,28 @@ text = "Starred tasks"
 
 [node name="StarredTasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 33.0
 margin_right = 1072.0
-margin_bottom = 85.0
 size_flags_horizontal = 3
 
 [node name="ActiveTasksLabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 89.0
+margin_top = 4.0
 margin_right = 1072.0
-margin_bottom = 118.0
+margin_bottom = 33.0
 theme = ExtResource( 7 )
 text = "Active tasks"
 
 [node name="TasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 122.0
+margin_top = 37.0
 margin_right = 1072.0
-margin_bottom = 320.0
+margin_bottom = 351.0
 size_flags_horizontal = 3
 custom_constants/separation = 5
 
 [node name="CompletedTaskslabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
+visible = false
 margin_top = 324.0
 margin_right = 1072.0
 margin_bottom = 353.0
@@ -117,9 +117,9 @@ text = "Completed tasks"
 
 [node name="CompletedTasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
 unique_name_in_owner = true
-margin_top = 357.0
+margin_top = 355.0
 margin_right = 1072.0
-margin_bottom = 409.0
+margin_bottom = 355.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Tasks"]
@@ -150,6 +150,7 @@ margin_right = 322.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 137, 26 )
 rect_pivot_offset = Vector2( 68.5, 0 )
+disabled = true
 text = " Delete Completed"
 icon = ExtResource( 4 )
 
@@ -233,7 +234,7 @@ toggle_mode = false
 keep_pressed_outside = true
 text = "Press the star icon to mark important tasks you want to keep on the top of the list"
 clip_text = true
-items = [ "Press the star icon to mark important tasks you want to keep on the top of the list", null, false, 0, null, "Start using the To-Do addon to effectively keep track of development related tasks", null, false, 1, null, "Click the \"info\" button (questionmark) to see more details about a task", null, false, 2, null, "Experiment with the arrow keys to see how tasks can be moved up and down in a list", null, false, 3, null, "Add notes linked ot a task directly from the task list", null, false, 4, null, "Also try adding some notes from the Notes tab", null, false, 5, null, "Try colour-tags to organise tasks visually", null, false, 6, null, "Use FocusTimer to keep time-limits", null, false, 7, null, "Keep track of time spent on the current task with FreeFocus timer", null, false, 8, null, "Other...", null, false, 9, null ]
+items = [ "Press the star icon to mark important tasks you want to keep on the top of the list", null, false, 0, null, "Start using the To-Do addon to effectively keep track of development related tasks", null, false, 1, null, "Try colour-tags to organise tasks visually", null, false, 2, null, "Click the \"info\" button (questionmark) to see more details about a task", null, false, 3, null, "Experiment with the arrow keys to see how tasks can be moved up and down in a list", null, false, 4, null, "Add notes linked ot a task directly from the task list", null, false, 5, null, "Also try adding some notes from the Notes tab", null, false, 6, null, "Keep track of time spent on the current task with Free Focus timer", null, false, 7, null, "Use a Focus Timer to keep time-limits", null, false, 8, null, "When you mark a task as completed, it moves to the bottomof the list and becomes read-only", null, false, 9, null, "You can delete all completed tasks with a single click, to keep things tidy", null, false, 10, null, "Other...", null, false, 11, null ]
 selected = 0
 
 [node name="TaskName" type="LineEdit" parent="TabContainer/FocusTimer"]

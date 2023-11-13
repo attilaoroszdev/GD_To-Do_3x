@@ -463,7 +463,6 @@ func save_changes() :
 			##loops trough every task.
 			for t in vbox.get_children() :
 				##gets the data of the task.
-				print("Saving colour tag: ", t.color_tag)
 				var info = {
 					"id": t.id, # For identifying atached notes
 					"completed" : t.completed,
@@ -638,5 +637,4 @@ func task_starred(task, is_starred):
 
 # _task and _color_tag are not yet used, but added for future
 func task_color_tag_changed(_task, _color_tag):
-	print("saving from colour tag changes")
 	save_changes()

@@ -19,13 +19,16 @@ const DEFAULT_PICKER_COLOUR = Color("2a3142")
 export var content:String
 onready var label = $"%LineEdit"
 onready var check_box = $"%CheckBox"
-onready var color_tag_button = $"%ColourTagButton"
+onready var color_tag_button = $"%ColorTagButton"
 onready var move_up_button = $"%MoveUpButton"
 onready var move_down_button = $"%MoveDownButton"
 onready var start_timer_button = $"%TimerStartButton"
 onready var stop_timer_button = $"%TimerStopButton"
 onready var task_note_button = $"%TaskNoteButton"
 onready var favourite_button = $"%FavouriteButton"
+onready var colour_picker = $"%ColorPickerPopup"
+onready var colour_tag_rect = $"%ColortagRect"
+onready var color_picker_popup = $"%ColorPickerPopup"
 
 var note_icon = preload("res://addons/To-Do/Icons/File.svg")
 var new_note_icon = preload("res://addons/To-Do/Icons/New.svg")
@@ -38,6 +41,7 @@ var color_tag:String = DEFAULT_COLOR_TAG
 var new_stylebox_normal
 
 func _ready():
+	
 	label.text = content
 	check_box.pressed = completed
 	label.editable = not completed
@@ -55,10 +59,15 @@ func _ready():
 	new_stylebox_normal = label.get_stylebox("normal").duplicate()
 	new_stylebox_normal.border_color = Color(color_tag)
 	label.add_stylebox_override("normal", new_stylebox_normal)
+	colour_tag_rect.rect_size.y = color_tag_button.rect_size.y - 8
+	colour_tag_rect.rect_size.x = color_tag_button.rect_size.x - 8
+	colour_tag_rect.rect_position = Vector2(4,4)
+	
+
 	if color_tag == DEFAULT_COLOR_TAG or color_tag == "#000000":
-		color_tag_button.color = DEFAULT_PICKER_COLOUR
+		colour_tag_rect.color = DEFAULT_PICKER_COLOUR
 	else:
-		color_tag_button.color = Color(color_tag)
+		colour_tag_rect.color = Color(color_tag)
 
 
 
@@ -189,15 +198,31 @@ func _on_FavouriteButton_toggled(button_pressed):
 		move_up_button.disabled = false
 	emit_signal("favourite_pressed", self, is_starred)
 
+	
 
 
-func _on_ColourTagButton_color_changed(color):
+func _on_ColorTagButton_pressed():
+	color_picker_popup.set_global_position(color_tag_button.rect_global_position + Vector2(15,15) - Vector2(0, color_picker_popup.rect_size.y))
+	color_picker_popup.popup()
+
+
+
+
+func _on_color_picked(color):
 	if color != Color.black and color != Color(DEFAULT_COLOR_TAG):
 		color_tag = "#" + color.to_html(false)
-		color_tag_button.color = Color(color_tag)
+		colour_tag_rect.color = Color(color_tag)
 	else:
 		color_tag = DEFAULT_COLOR_TAG
-		color_tag_button.color = DEFAULT_PICKER_COLOUR
+		colour_tag_rect.color = DEFAULT_PICKER_COLOUR
 	new_stylebox_normal.border_color = Color(color_tag)
 	label.add_stylebox_override("normal", new_stylebox_normal)
 	emit_signal("color_tag_changed", self, color_tag)
+
+
+func _on_Color_gui_input(event, extra_arg_0):
+	if event is InputEventMouseButton and event.is_pressed():
+		_on_color_picked(extra_arg_0) # Replace with function body.
+		color_picker_popup.hide()
+
+
