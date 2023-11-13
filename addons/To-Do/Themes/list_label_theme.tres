@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=3 format=2]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://addons/To-Do/Fonts/arial.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+use_mipmaps = true
+use_filter = true
+extra_spacing_top = 10
+font_data = SubResource( 1 )
+
+[resource]
+Label/fonts/font = SubResource( 2 )
