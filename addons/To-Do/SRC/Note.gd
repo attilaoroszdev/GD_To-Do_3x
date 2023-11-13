@@ -5,6 +5,7 @@ signal state_changed()
 signal note_removed(note, save)
 
 onready var title_edit = $"%Title"
+onready var container = $"%VBoxContainer"
 onready var content_edit = $"%Content"
 onready var save_button = $"%SaveButton"
 onready var task_chooser = $"%TaskChooser"
@@ -21,6 +22,8 @@ func _on_DeleteButton_pressed():
 
 func _on_Content_text_changed():
 	content = content_edit.text
+#	hidden_content.text = content_edit.text
+	
 #	I really don't want to call save on every keypress.
 #	Will save on gtab change or on exit
 #	emit_signal("state_changed")

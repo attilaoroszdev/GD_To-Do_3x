@@ -1,11 +1,12 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/To-Do/SRC/Main.gd" type="Script" id=1]
 [ext_resource path="res://addons/To-Do/Icons/Add.svg" type="Texture" id=2]
 [ext_resource path="res://addons/To-Do/SRC/Focus Timer.gd" type="Script" id=3]
 [ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=4]
 [ext_resource path="res://addons/To-Do/SRC/Notes.gd" type="Script" id=5]
-[ext_resource path="res://addons/To-Do/Fonts/spin_box_style.tres" type="Theme" id=6]
+[ext_resource path="res://addons/To-Do/Themes/spin_box_style.tres" type="Theme" id=6]
+[ext_resource path="res://addons/To-Do/Themes/list_label_theme.tres" type="Theme" id=7]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://addons/To-Do/Fonts/arial.ttf"
@@ -65,17 +66,61 @@ icon_align = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Tasks"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 45.0
-margin_bottom = -42.0
+margin_top = 34.0
+margin_bottom = -43.0
 scroll_horizontal_enabled = false
 
-[node name="TasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer"]
+[node name="TaskContainerContainer" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer"]
 unique_name_in_owner = true
 margin_right = 1072.0
-margin_bottom = 1797.0
+margin_bottom = 1807.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="StarredTasksLabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_right = 1072.0
+margin_bottom = 29.0
+theme = ExtResource( 7 )
+text = "Starred tasks"
+
+[node name="StarredTasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_top = 33.0
+margin_right = 1072.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+
+[node name="ActiveTasksLabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_top = 117.0
+margin_right = 1072.0
+margin_bottom = 146.0
+theme = ExtResource( 7 )
+text = "Active tasks"
+
+[node name="TasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_top = 150.0
+margin_right = 1072.0
+margin_bottom = 203.0
+size_flags_horizontal = 3
 custom_constants/separation = 5
+
+[node name="CompletedTaskslabel" type="Label" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_top = 207.0
+margin_right = 1072.0
+margin_bottom = 236.0
+theme = ExtResource( 7 )
+text = "Completed tasks"
+
+[node name="CompletedTasksVBox" type="VBoxContainer" parent="TabContainer/Tasks/ScrollContainer/TaskContainerContainer"]
+unique_name_in_owner = true
+margin_top = 240.0
+margin_right = 1072.0
+margin_bottom = 348.0
+size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Tasks"]
 anchor_left = 0.5
@@ -186,9 +231,9 @@ anchor_right = 0.8
 anchor_bottom = 0.15
 toggle_mode = false
 keep_pressed_outside = true
-text = "Win Screen"
+text = "Starred task 1"
 clip_text = true
-items = [ "Win Screen", null, false, 0, null, "Checkpoints Save System", null, false, 1, null, "Parallax", null, false, 2, null, "Other...", null, false, 3, null ]
+items = [ "Starred task 1", null, false, 0, null, "Starred task 2", null, false, 1, null, "Starred task 3", null, false, 2, null, "Labels should only display when relevant", null, false, 3, null, "Labels need to be styled. At minimum, there needs to be some headroom", null, false, 4, null, "Other...", null, false, 5, null ]
 selected = 0
 
 [node name="TaskName" type="LineEdit" parent="TabContainer/FocusTimer"]
@@ -200,7 +245,7 @@ anchor_right = 0.8
 anchor_bottom = 0.25
 grow_horizontal = 2
 grow_vertical = 2
-text = "Win Screen"
+text = "Labels need styling"
 expand_to_text_length = true
 placeholder_text = "Enter Task Name"
 caret_blink = true
@@ -319,7 +364,6 @@ margin_top = -36.0
 margin_right = 6.0
 margin_bottom = -10.0
 grow_horizontal = 2
-disabled = true
 text = " Clear Focus History "
 icon = ExtResource( 4 )
 

@@ -55,8 +55,8 @@ func _on_CheckBox_toggled(button_pressed):
 #			favourite_button.pressed = false
 			favourite_button.visible = false
 			label.editable = false
-			move_up_button.disabled = true
-			move_down_button.disabled = true
+#			move_up_button.disabled = true
+#			move_down_button.disabled = true
 			start_timer_button.disabled = true
 			data.state = "Completed"
 			if data.completion_time == "..." :
@@ -64,8 +64,8 @@ func _on_CheckBox_toggled(button_pressed):
 		else :
 			favourite_button.visible = true
 			label.editable = true
-			move_up_button.disabled = false
-			move_down_button.disabled = false
+#			move_up_button.disabled = false
+#			move_down_button.disabled = false
 			start_timer_button.disabled = false
 			data.state = "Incomplete"
 			if not data.completion_time == "..." :
