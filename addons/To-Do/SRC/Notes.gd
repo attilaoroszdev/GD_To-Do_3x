@@ -20,6 +20,7 @@ func set_up_task_chooser(open_tasks:Array, completed_tasks:Array):
 		note.task_chooser.disabled = false
 		note.content_edit.readonly = false
 		note.title_edit.editable = true
+		note.linked_task_completed = false
 		# First check if the note is associated with a completed task
 		var found_completed_task:bool = false
 		if completed_tasks.size() > 0:
@@ -31,6 +32,7 @@ func set_up_task_chooser(open_tasks:Array, completed_tasks:Array):
 					note.task_chooser.disabled = true
 					note.content_edit.readonly = true
 					note.title_edit.editable = false
+					note.linked_task_completed = true
 					found_completed_task = true
 					break
 					

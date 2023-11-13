@@ -9,6 +9,7 @@ signal move_down(task)
 signal start_task_timer(task)
 signal stop_task_timer(task)
 signal note_button_pressed(task)
+signal favourite_pressed(task, starred)
 
 const InfoBox = preload("res://addons/To-Do/SRC/TaskInfo.tscn")
 
@@ -20,6 +21,7 @@ onready var move_down_button = $"%MoveDownButton"
 onready var start_timer_button = $"%TimerStartButton"
 onready var stop_timer_button = $"%TimerStopButton"
 onready var task_note_button = $"%TaskNoteButton"
+onready var favourite_button = $"%FavouriteButton"
 
 var note_icon = preload("res://addons/To-Do/Icons/File.svg")
 var new_note_icon = preload("res://addons/To-Do/Icons/New.svg")
@@ -27,11 +29,13 @@ var id:int
 var completed := false
 var has_note:bool = false
 var data:Dictionary
+var is_starred:bool = false
 
 func _ready():
 	label.text = content
 	check_box.pressed = completed
 	label.editable = not completed
+	favourite_button.pressed = is_starred
 	if data.empty() :
 		print("data empty")
 		data = {
@@ -44,30 +48,36 @@ func _ready():
 
 
 func _on_CheckBox_toggled(button_pressed):
+	completed = button_pressed
 	if not data.empty() :
 		if completed :
+#			is_starred = false
+#			favourite_button.pressed = false
+			favourite_button.visible = false
 			label.editable = false
 #			move_up_button.disabled = true
 #			move_down_button.disabled = true
 			start_timer_button.disabled = true
 			data.state = "Completed"
 			if data.completion_time == "..." :
-				data["completion_time"] = Time.get_datetime_string_from_system(false, true)
+				data.completion_time = Time.get_datetime_string_from_system(false, true)
 		else :
+			favourite_button.visible = true
 			label.editable = true
 #			move_up_button.disabled = false
 #			move_down_button.disabled = false
 			start_timer_button.disabled = false
 			data.state = "Incomplete"
 			if not data.completion_time == "..." :
-				data["completion_time"] == "..."
+				# there was a tpypo preventing "completion time to be reset to "..."
+				data.completion_time = "..."
 
 	# I want to save regardless. E.g. if I re-enable a previously completed task (changed my mind, forgot something)
 #	if button_pressed == completed :
 #		return
 	# Sets the View/add note button
 	set_has_note(has_note)
-	completed = button_pressed
+	
 	emit_signal("state_changed", self)
 
 
@@ -150,3 +160,16 @@ func set_has_note(value:bool):
 		else:
 			task_note_button.icon = new_note_icon
 			task_note_button.hint_tooltip = "Add new note linked to this task"
+
+
+func _on_FavouriteButton_toggled(button_pressed):
+	is_starred = button_pressed
+	
+	if is_starred:
+		move_down_button.disabled = true
+		move_up_button.disabled = true
+	else:
+		move_down_button.disabled = false
+		move_up_button.disabled = false
+	emit_signal("favourite_pressed", self, is_starred)
+

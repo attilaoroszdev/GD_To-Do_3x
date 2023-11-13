@@ -12,7 +12,7 @@ onready var task_chooser = $"%TaskChooser"
 var title:String
 var content:String
 var linked_task:int = 0
-
+var linked_task_completed:bool = false # No need to save this, it will be dynamically assigned on load
 
 func _on_DeleteButton_pressed():
 	emit_signal("note_removed", self, true)
