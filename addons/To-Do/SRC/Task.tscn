@@ -11,7 +11,7 @@
 [ext_resource path="res://addons/To-Do/Icons/NonFavorite.svg" type="Texture" id=9]
 [ext_resource path="res://addons/To-Do/Icons/Favorites.svg" type="Texture" id=10]
 [ext_resource path="res://addons/To-Do/Icons/Eraser.svg" type="Texture" id=11]
-[ext_resource path="res://addons/To-Do/Icons/droplet_2.svg" type="Texture" id=12]
+[ext_resource path="res://addons/To-Do/Icons/droplet.svg" type="Texture" id=12]
 
 [sub_resource type="StyleBoxFlat" id=4]
 content_margin_left = 8.0
