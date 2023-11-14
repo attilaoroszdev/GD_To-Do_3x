@@ -18,8 +18,8 @@ const InfoBox = preload("res://addons/To-Do/SRC/TaskInfo.tscn")
 const DEFAULT_BORDER_COLOUR = "#202531" #LineEdit's default border
 const DEFAULT_BG_COLOUR = "#262c3b" #LineEdit's default background
 const DEFAULT_PICKER_RECT_COLOUR = "#2a3142" #A little lighter version of the default background, to stand out better
-const TASK_BG_ALPHA:float = 0.08
-const TASK_BORDER_ALPHA:float = 0.7
+const TASK_BG_ALPHA:float = 0.06
+const TASK_BORDER_ALPHA:float = 0.6
 
 export var content:String
 onready var label = $"%LineEdit"
