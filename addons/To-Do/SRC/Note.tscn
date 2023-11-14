@@ -1,8 +1,32 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/To-Do/SRC/Note.gd" type="Script" id=1]
 [ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=2]
 [ext_resource path="res://addons/To-Do/Icons/Save.svg" type="Texture" id=3]
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color( 0.180392, 0.207843, 0.278431, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.12549, 0.145098, 0.192157, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color( 0.14902, 0.172549, 0.231373, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.12549, 0.145098, 0.192157, 1 )
 
 [node name="Note" type="Panel"]
 anchor_right = 1.0
@@ -62,17 +86,19 @@ icon_align = 1
 unique_name_in_owner = true
 margin_top = 45.0
 margin_right = 1070.0
-margin_bottom = 65.0
+margin_bottom = 75.0
 focus_mode = 1
+custom_styles/disabled = SubResource( 2 )
+custom_styles/normal = SubResource( 1 )
 enabled_focus_mode = 1
 keep_pressed_outside = true
 clip_text = true
 
 [node name="Content" type="TextEdit" parent="VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 75.0
+margin_top = 85.0
 margin_right = 1070.0
-margin_bottom = 294.0
+margin_bottom = 296.0
 rect_min_size = Vector2( 0, 211 )
 size_flags_horizontal = 3
 size_flags_vertical = 3

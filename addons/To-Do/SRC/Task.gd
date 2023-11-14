@@ -13,8 +13,13 @@ signal favourite_pressed(task, starred)
 signal color_tag_changed(task, color_tag)
 
 const InfoBox = preload("res://addons/To-Do/SRC/TaskInfo.tscn")
-const DEFAULT_COLOR_TAG = "#202531"
-const DEFAULT_PICKER_COLOUR = Color("2a3142")
+
+# In Godot 4 the defaults will probably need to be changed to match the UI colour cheme
+const DEFAULT_BORDER_COLOUR = "#202531" #LineEdit's default border
+const DEFAULT_BG_COLOUR = "#262c3b" #LineEdit's default background
+const DEFAULT_PICKER_RECT_COLOUR = "#2a3142" #A little lighter version of the default background, to stand out better
+const TASK_BG_ALPHA:float = 0.08
+const TASK_BORDER_ALPHA:float = 0.7
 
 export var content:String
 onready var label = $"%LineEdit"
@@ -37,7 +42,7 @@ var completed := false
 var has_note:bool = false
 var data:Dictionary
 var is_starred:bool = false
-var color_tag:String = DEFAULT_COLOR_TAG
+var color_tag:String = DEFAULT_BG_COLOUR
 var new_stylebox_normal
 
 func _ready():
@@ -57,18 +62,26 @@ func _ready():
 	
 	data.state = "Completed" if completed else "Incomplete"
 	new_stylebox_normal = label.get_stylebox("normal").duplicate()
-	new_stylebox_normal.border_color = Color(color_tag)
-	label.add_stylebox_override("normal", new_stylebox_normal)
+	
+	# Set up colour tag picker, and the task's colour to match the colour tag
+	_on_color_picked(Color(color_tag))
+#	if color_tag == DEFAULT_BG_COLOUR:
+#		colour_tag_rect.color = Color(DEFAULT_PICKER_RECT_COLOUR)
+#		new_stylebox_normal.border_color = Color(DEFAULT_BORDER_COLOUR)
+#		new_stylebox_normal.bg_color = Color(DEFAULT_BG_COLOUR)
+#	else:
+#		colour_tag_rect.color = Color(color_tag)
+#		var new_border_color = Color(color_tag)
+#		new_border_color.a = TASK_BORDER_ALPHA
+#		new_stylebox_normal.border_color = new_border_color
+#		var new_bg_color = Color(color_tag)
+#		new_bg_color.a = TASK_BG_ALPHA
+#		new_stylebox_normal.bg_color = new_bg_color
+#	label.add_stylebox_override("normal", new_stylebox_normal)	
+	
 	colour_tag_rect.rect_size.y = color_tag_button.rect_size.y - 8
 	colour_tag_rect.rect_size.x = color_tag_button.rect_size.x - 8
 	colour_tag_rect.rect_position = Vector2(4,4)
-	
-
-	if color_tag == DEFAULT_COLOR_TAG or color_tag == "#000000":
-		colour_tag_rect.color = DEFAULT_PICKER_COLOUR
-	else:
-		colour_tag_rect.color = Color(color_tag)
-
 
 
 
@@ -76,12 +89,8 @@ func _on_CheckBox_toggled(button_pressed):
 	completed = button_pressed
 	if not data.empty() :
 		if completed :
-#			is_starred = false
-#			favourite_button.pressed = false
 			favourite_button.visible = false
 			label.editable = false
-#			move_up_button.disabled = true
-#			move_down_button.disabled = true
 			start_timer_button.disabled = true
 			data.state = "Completed"
 			if data.completion_time == "..." :
@@ -89,17 +98,12 @@ func _on_CheckBox_toggled(button_pressed):
 		else :
 			favourite_button.visible = true
 			label.editable = true
-#			move_up_button.disabled = false
-#			move_down_button.disabled = false
 			start_timer_button.disabled = false
 			data.state = "Incomplete"
 			if not data.completion_time == "..." :
 				# there was a tpypo preventing "completion time to be reset to "..."
 				data.completion_time = "..."
 
-	# I want to save regardless. E.g. if I re-enable a previously completed task (changed my mind, forgot something)
-#	if button_pressed == completed :
-#		return
 	# Sets the View/add note button
 	set_has_note(has_note)
 	
@@ -108,9 +112,6 @@ func _on_CheckBox_toggled(button_pressed):
 
 func _on_DeleteButton_pressed():
 	emit_signal("task_removed", self, true)
-	# Want to save things upon deletion, and maybe do other thigns.
-	# It wil be freed from the parent
-#	queue_free()
 
 
 func _on_LineEdit_text_changed(new_text):
@@ -200,29 +201,43 @@ func _on_FavouriteButton_toggled(button_pressed):
 
 	
 
-
+# This will show the colour picker popup right above the button
 func _on_ColorTagButton_pressed():
 	color_picker_popup.set_global_position(color_tag_button.rect_global_position + Vector2(15,15) - Vector2(0, color_picker_popup.rect_size.y))
 	color_picker_popup.popup()
 
 
-
-
+# Sets the colour_tag and changes the colour of the picker and the task
 func _on_color_picked(color):
-	if color != Color.black and color != Color(DEFAULT_COLOR_TAG):
+	if color != Color(DEFAULT_BG_COLOUR):
 		color_tag = "#" + color.to_html(false)
 		colour_tag_rect.color = Color(color_tag)
+		var new_border_color = Color(color_tag)
+		new_border_color.a = TASK_BORDER_ALPHA
+		new_stylebox_normal.border_color = new_border_color
+		var new_bg_color = Color(color_tag)
+		new_bg_color.a = TASK_BG_ALPHA
+		new_stylebox_normal.bg_color = new_bg_color
 	else:
-		color_tag = DEFAULT_COLOR_TAG
-		colour_tag_rect.color = DEFAULT_PICKER_COLOUR
-	new_stylebox_normal.border_color = Color(color_tag)
+		color_tag = DEFAULT_BG_COLOUR
+		colour_tag_rect.color = Color(DEFAULT_PICKER_RECT_COLOUR)
+		new_stylebox_normal.border_color = Color(DEFAULT_BORDER_COLOUR)
+		new_stylebox_normal.bg_color = Color(DEFAULT_BG_COLOUR)
+	
 	label.add_stylebox_override("normal", new_stylebox_normal)
 	emit_signal("color_tag_changed", self, color_tag)
 
-
+# All the ColorRects from the grid have signals connected to this one function.
+# extra_arg_0 is the hardcoded #HEX colur vale of the colourrect
 func _on_Color_gui_input(event, extra_arg_0):
 	if event is InputEventMouseButton and event.is_pressed():
-		_on_color_picked(extra_arg_0) # Replace with function body.
+		# Set the colour and hide the popup
+		_on_color_picked(extra_arg_0) 
 		color_picker_popup.hide()
 
 
+
+# Reset the colour to default and hide the popup
+func _on_ClearColorButton_pressed():
+	_on_color_picked(Color(DEFAULT_BG_COLOUR))
+	color_picker_popup.hide()

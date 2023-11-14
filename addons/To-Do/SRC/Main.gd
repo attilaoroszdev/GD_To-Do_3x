@@ -374,14 +374,14 @@ func load_tasks_and_notes():
 	#Disable the button if there are no completed tasks at load time
 	delete_completed_tasks_button.disabled = completed_tasks_v_box.get_child_count() == 0
 	
-	if is_instance_valid(notes_v_box):
-		if notes_v_box.get_child_count() > 0:
-			notes_are_empty = false
-			delete_all_notes_button.disabled = false
-			load_predefined_tasks()
-			sort_notes()
-		else:
-			delete_all_notes_button.disabled = true
+#	if is_instance_valid(notes_v_box):
+	if notes_v_box.get_child_count() > 0 or starred_tasks_v_box.get_child_count() > 0 or completed_tasks_v_box.get_child_count() > 0:
+		notes_are_empty = false
+		delete_all_notes_button.disabled = false
+		load_predefined_tasks()
+		sort_notes()
+	else:
+		delete_all_notes_button.disabled = true
 	check_existing_task_notes()
 
 # only show the label, if for non-empty list containers
@@ -638,3 +638,4 @@ func task_starred(task, is_starred):
 # _task and _color_tag are not yet used, but added for future
 func task_color_tag_changed(_task, _color_tag):
 	save_changes()
+	load_predefined_tasks()
