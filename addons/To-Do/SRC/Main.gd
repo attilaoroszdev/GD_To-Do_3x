@@ -316,7 +316,7 @@ func load_tasks_and_notes():
 			if t.has("color_tag"):
 				ins.color_tag = t.color_tag
 			else:
-				ins.color_tag = ins.DEFAULT_COLOR_TAG
+				ins.color_tag = ins.DEFAULT_BG_COLOUR
 				
 			if t.has("data") :
 				ins.data = t.data.duplicate()
