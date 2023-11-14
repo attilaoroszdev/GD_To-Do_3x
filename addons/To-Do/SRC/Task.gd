@@ -18,8 +18,8 @@ const InfoBox = preload("res://addons/To-Do/SRC/TaskInfo.tscn")
 const DEFAULT_BORDER_COLOUR = "#202531" #LineEdit's default border
 const DEFAULT_BG_COLOUR = "#262c3b" #LineEdit's default background
 const DEFAULT_PICKER_RECT_COLOUR = "#2a3142" #A little lighter version of the default background, to stand out better
-const TASK_BG_ALPHA:float = 0.06
-const TASK_BORDER_ALPHA:float = 0.6
+const TASK_BG_ALPHA:float = 0.03
+const TASK_BORDER_ALPHA:float = 0.4
 
 export var content:String
 onready var label = $"%LineEdit"
@@ -207,15 +207,18 @@ func _on_color_picked(color):
 		new_border_color.a = TASK_BORDER_ALPHA
 		new_stylebox_normal.border_color = new_border_color
 		new_stylebox_read_only.border_color = new_border_color
+		# Make this optional in Settings
 		var new_bg_color = Color(color_tag)
 		new_bg_color.a = TASK_BG_ALPHA
-		new_stylebox_normal.bg_color = new_bg_color
+		var blended_bg_color = Color(DEFAULT_BG_COLOUR).blend(new_bg_color)
+		new_stylebox_normal.bg_color = blended_bg_color
 		paint_icon.visible = false
 	else:
 		color_tag = DEFAULT_BG_COLOUR
 		colour_tag_rect.color = Color(DEFAULT_PICKER_RECT_COLOUR)
 		new_stylebox_normal.border_color = Color(DEFAULT_BORDER_COLOUR)
 		new_stylebox_read_only.border_color = Color(DEFAULT_BORDER_COLOUR)
+		# Make this optional in Settings
 		new_stylebox_normal.bg_color = Color(DEFAULT_BG_COLOUR)
 		paint_icon.visible = not completed
 	

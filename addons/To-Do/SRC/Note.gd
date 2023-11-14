@@ -7,7 +7,7 @@ signal note_removed(note, save)
 const DEFAULT_BORDER_COLOUR = "#202531"
 const DEFAULT_BG_COLOUR = "#262c3b"
 const DEFAULT_PICKER_RECT_COLOUR = "#2a3142"
-const TASK_BG_ALPHA:float = 0.06
+const TASK_BG_ALPHA:float = 0.04
 const TASK_BORDER_ALPHA:float = 0.6
 
 onready var title_edit = $"%Title"
