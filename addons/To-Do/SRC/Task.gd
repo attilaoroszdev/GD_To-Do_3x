@@ -34,6 +34,7 @@ onready var favourite_button = $"%FavouriteButton"
 onready var colour_picker = $"%ColorPickerPopup"
 onready var colour_tag_rect = $"%ColortagRect"
 onready var color_picker_popup = $"%ColorPickerPopup"
+onready var paint_icon = $"%PaintIcon"
 
 var note_icon = preload("res://addons/To-Do/Icons/File.svg")
 var new_note_icon = preload("res://addons/To-Do/Icons/New.svg")
@@ -44,6 +45,7 @@ var data:Dictionary
 var is_starred:bool = false
 var color_tag:String = DEFAULT_BG_COLOUR
 var new_stylebox_normal
+var new_stylebox_read_only
 
 func _ready():
 	
@@ -51,6 +53,7 @@ func _ready():
 	check_box.pressed = completed
 	label.editable = not completed
 	favourite_button.pressed = is_starred
+	color_tag_button.disabled = completed
 	if data.empty() :
 		print("data empty")
 		data = {
@@ -62,43 +65,31 @@ func _ready():
 	
 	data.state = "Completed" if completed else "Incomplete"
 	new_stylebox_normal = label.get_stylebox("normal").duplicate()
+	new_stylebox_read_only = label.get_stylebox("read_only").duplicate()
 	
 	# Set up colour tag picker, and the task's colour to match the colour tag
 	_on_color_picked(Color(color_tag))
-#	if color_tag == DEFAULT_BG_COLOUR:
-#		colour_tag_rect.color = Color(DEFAULT_PICKER_RECT_COLOUR)
-#		new_stylebox_normal.border_color = Color(DEFAULT_BORDER_COLOUR)
-#		new_stylebox_normal.bg_color = Color(DEFAULT_BG_COLOUR)
-#	else:
-#		colour_tag_rect.color = Color(color_tag)
-#		var new_border_color = Color(color_tag)
-#		new_border_color.a = TASK_BORDER_ALPHA
-#		new_stylebox_normal.border_color = new_border_color
-#		var new_bg_color = Color(color_tag)
-#		new_bg_color.a = TASK_BG_ALPHA
-#		new_stylebox_normal.bg_color = new_bg_color
-#	label.add_stylebox_override("normal", new_stylebox_normal)	
+
 	
-	colour_tag_rect.rect_size.y = color_tag_button.rect_size.y - 8
-	colour_tag_rect.rect_size.x = color_tag_button.rect_size.x - 8
-	colour_tag_rect.rect_position = Vector2(4,4)
+	colour_tag_rect.rect_size.y = color_tag_button.rect_size.y - 6
+	colour_tag_rect.rect_size.x = color_tag_button.rect_size.x - 6
+	colour_tag_rect.rect_position = Vector2(3,3)
 
 
 
 func _on_CheckBox_toggled(button_pressed):
 	completed = button_pressed
 	if not data.empty() :
+		paint_icon.visible = not completed
+		favourite_button.visible = not completed
+		label.editable = not completed
+		start_timer_button.disabled = completed
+		color_tag_button.disabled = completed
 		if completed :
-			favourite_button.visible = false
-			label.editable = false
-			start_timer_button.disabled = true
 			data.state = "Completed"
 			if data.completion_time == "..." :
 				data.completion_time = Time.get_datetime_string_from_system(false, true)
 		else :
-			favourite_button.visible = true
-			label.editable = true
-			start_timer_button.disabled = false
 			data.state = "Incomplete"
 			if not data.completion_time == "..." :
 				# there was a tpypo preventing "completion time to be reset to "..."
@@ -215,16 +206,21 @@ func _on_color_picked(color):
 		var new_border_color = Color(color_tag)
 		new_border_color.a = TASK_BORDER_ALPHA
 		new_stylebox_normal.border_color = new_border_color
+		new_stylebox_read_only.border_color = new_border_color
 		var new_bg_color = Color(color_tag)
 		new_bg_color.a = TASK_BG_ALPHA
 		new_stylebox_normal.bg_color = new_bg_color
+		paint_icon.visible = false
 	else:
 		color_tag = DEFAULT_BG_COLOUR
 		colour_tag_rect.color = Color(DEFAULT_PICKER_RECT_COLOUR)
 		new_stylebox_normal.border_color = Color(DEFAULT_BORDER_COLOUR)
+		new_stylebox_read_only.border_color = Color(DEFAULT_BORDER_COLOUR)
 		new_stylebox_normal.bg_color = Color(DEFAULT_BG_COLOUR)
+		paint_icon.visible = not completed
 	
 	label.add_stylebox_override("normal", new_stylebox_normal)
+	label.add_stylebox_override("read_only", new_stylebox_read_only)
 	emit_signal("color_tag_changed", self, color_tag)
 
 # All the ColorRects from the grid have signals connected to this one function.

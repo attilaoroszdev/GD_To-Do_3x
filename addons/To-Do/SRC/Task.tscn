@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://addons/To-Do/SRC/Task.gd" type="Script" id=1]
 [ext_resource path="res://addons/To-Do/Icons/Remove.svg" type="Texture" id=2]
@@ -11,8 +11,19 @@
 [ext_resource path="res://addons/To-Do/Icons/NonFavorite.svg" type="Texture" id=9]
 [ext_resource path="res://addons/To-Do/Icons/Favorites.svg" type="Texture" id=10]
 [ext_resource path="res://addons/To-Do/Icons/Eraser.svg" type="Texture" id=11]
+[ext_resource path="res://addons/To-Do/Icons/LabelSettings.svg" type="Texture" id=12]
 
 [sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color( 0.180392, 0.207843, 0.278431, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.12549, 0.145098, 0.192157, 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
 content_margin_left = 28.0
 bg_color = Color( 0.14902, 0.172549, 0.231373, 1 )
 border_width_left = 1
@@ -46,7 +57,8 @@ margin_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/font_color = Color( 0.768627, 0.776471, 0.8, 1 )
-custom_styles/normal = SubResource( 4 )
+custom_styles/read_only = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 
 [node name="FavouriteButton" type="CheckButton" parent="LineEdit"]
 unique_name_in_owner = true
@@ -65,16 +77,17 @@ margin_left = 825.0
 margin_right = 855.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 30, 0 )
+hint_tooltip = "Colour tag"
 size_flags_vertical = 15
 
 [node name="ColortagRect" type="ColorRect" parent="ColorTagButton"]
 unique_name_in_owner = true
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_left = 3.0
+margin_top = 3.0
+margin_right = -3.0
+margin_bottom = -3.0
 mouse_filter = 2
 size_flags_horizontal = 15
 size_flags_vertical = 15
@@ -179,6 +192,15 @@ margin_bottom = -15.0
 grow_horizontal = 2
 text = "Clear"
 icon = ExtResource( 11 )
+
+[node name="PaintIcon" type="TextureRect" parent="ColorTagButton/ColortagRect"]
+unique_name_in_owner = true
+modulate = Color( 1, 1, 1, 0.717647 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 12 )
+expand = true
+stretch_mode = 4
 
 [node name="InfoButton" type="Button" parent="."]
 margin_left = 860.0
