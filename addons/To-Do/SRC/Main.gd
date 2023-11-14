@@ -38,6 +38,7 @@ var running_task_id:int
 ##adda new task
 func _on_AddButton_pressed():
 	if task_edit.text != "" :
+		tasks_are_empty = false
 		running_task_id += 1
 		var ins = task.instance()
 		ins.content = task_edit.text
@@ -74,6 +75,7 @@ func _on_AddButton_pressed():
 #		sort_tasks()
 		disable_up_down_buttons_at_edges()
 		toggle_list_labels()
+		save_changes()
 		# Since we now have at least one task
 		delete_all_tasks_button.disabled = false
 #		delete_completed_tasks_button.disabled = false
@@ -364,13 +366,14 @@ func load_tasks_and_notes():
 		tasks_are_empty = false
 #		sort_tasks()
 		disable_up_down_buttons_at_edges()
-		toggle_list_labels()
+		
 		
 		delete_all_tasks_button.disabled = false
 		
 	else:
 		delete_all_tasks_button.disabled = true
-	
+
+	toggle_list_labels()
 	#Disable the button if there are no completed tasks at load time
 	delete_completed_tasks_button.disabled = completed_tasks_v_box.get_child_count() == 0
 	
@@ -423,6 +426,7 @@ func remove_task(task, save_after_removal:bool):
 	var parent_v_box = task.get_parent()
 	parent_v_box.remove_child(task)
 	# Also delete the linked note
+			
 	for note in notes_v_box.get_children():
 		if note.linked_task == task.id:
 			remove_note(note, save_after_removal)
@@ -634,6 +638,7 @@ func task_starred(task, is_starred):
 #	sort_tasks()
 	toggle_list_labels()
 	disable_up_down_buttons_at_edges()
+	
 
 # _task and _color_tag are not yet used, but added for future
 func task_color_tag_changed(_task, _color_tag):
