@@ -1,10 +1,12 @@
-![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/GD_To-Do_3x)
-![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/GD_To-Do_3x)
-![GitHub License](https://img.shields.io/github/license/attilaoroszdev/GD_To-Do_3x)
-![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/GD_To-Do_3x)
-![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/attilaoroszdev/GD_To-Do_3x)
-![Godot v3](https://img.shields.io/badge/Godot-v3-%23478cbf?logo=godot-engine&logoColor=white)
-![Godot v3](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)
+[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/issues)
+[![GitHub License](https://img.shields.io/github/license/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/blob/main/LICENSE)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/releases)
+
+**Compatible with**
+
+[![Godot v3](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/3.x/)
+[![Godot v4](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/4.x/)
 
 # GD To-Do Is A Powerful Add-on For Managing Tasks Inside Godot Engine
 
@@ -62,6 +64,5 @@ This will add a new tab on the bottom panel which means installation was success
 ### Main contributors
 
 [**Mustache Games**](https://github.com/Mustache-Games) ([contact](mailto:))
-
 
 [**Attila Orosz**](https://github.com/attilaoroszdev) ([contact](mailto:attila.orosz.dev@gmail.com.com))
