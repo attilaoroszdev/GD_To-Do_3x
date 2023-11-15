@@ -80,7 +80,7 @@ func _ready():
 func _on_CheckBox_toggled(button_pressed):
 	completed = button_pressed
 	if not data.empty() :
-		paint_icon.visible = not completed
+		paint_icon.visible = not completed and color_tag == DEFAULT_BG_COLOUR
 		favourite_button.visible = not completed
 		label.editable = not completed
 		start_timer_button.disabled = completed
