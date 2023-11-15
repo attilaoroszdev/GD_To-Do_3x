@@ -3,17 +3,13 @@
 [![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/issues)
 [![GitHub License](https://img.shields.io/github/license/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/blob/main/LICENSE)
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/releases)
+[![Godot v3](https://img.shields.io/badge/Godot-v3-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/3.x/)
 
 # GD To-Do Is A Powerful Add-on For Managing Tasks Inside Godot Engine
 
 **This repository is for Godot 3.x [click here](https://github.com/attilaoroszdev/GD_To-Do_4x) for Godot 4.x version.**
 
 ---
-
-## Compatibility
-
-[![Godot v3](https://img.shields.io/badge/Godot-v3-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/3.x/)
-[![Godot v4](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/4.x/)
 
 ## Features
 
@@ -62,9 +58,3 @@ This will add a new tab on the bottom panel which means installation was success
 <!-- MARKDOWN LINKS & IMAGES -->
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-### Main contributors
-
-[**Mustache Games**](https://github.com/Mustache-Games) ([contact](mailto:))
-
-[**Attila Orosz**](https://github.com/attilaoroszdev) ([contact](mailto:attila.orosz.dev@gmail.com.com))
