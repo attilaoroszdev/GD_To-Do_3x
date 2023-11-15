@@ -3,19 +3,16 @@
 [![GitHub License](https://img.shields.io/github/license/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/blob/main/LICENSE)
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/releases)
 
+**GD To-Do Is A Powerful Add-on For Managing Tasks Inside Godot Engine**
 
-# GD To-Do Is A Powerful Add-on For Managing Tasks Inside Godot Engine
-
-This repository is for Godot 3.x [click here](https://github.com/attilaoroszdev/GD_To-Do_4x) for Godot 4.x version.
+(This repository is for Godot 3.x [click here](https://github.com/attilaoroszdev/GD_To-Do_4x) for Godot 4.x version.)
 
 ---
 
-### Compatible with
+## Compatibility
 
-[![Godot v3](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/3.x/)
-
+[![Godot v3](https://img.shields.io/badge/Godot-v3-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/3.x/)
 [![Godot v4](https://img.shields.io/badge/Godot-v4-%23478cbf?logo=godot-engine&logoColor=white)](https://godotengine.org/download/4.x/)
-
 
 ## Features
 
